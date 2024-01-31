@@ -62,7 +62,7 @@ namespace StaffApplication.Services
 
                     response.ResponseMessage = "User Created Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var userView = _mapper.Map<List<UserViewModel>>(user);
+                    var userView = _mapper.Map<UserViewModel>(user);
                     response.Data = userView;
                     return response;
                 }
@@ -115,7 +115,7 @@ namespace StaffApplication.Services
 
                     response.ResponseMessage = "User Updated Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var userView = _mapper.Map<List<UserViewModel>>(user);
+                    var userView = _mapper.Map<UserViewModel>(user);
                     response.Data = userView;
                     return response;
                 }
@@ -167,7 +167,7 @@ namespace StaffApplication.Services
                     
                     response.ResponseMessage= "User Logged in  Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var LogView = _mapper.Map<List<LogViewModel>>(requesterDetails);
+                    var LogView = _mapper.Map<LogViewModel>(requesterDetails);
                     response.Data = LogView;
                     return response;
                 }
@@ -220,7 +220,7 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "User Logged out   Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var LogView = _mapper.Map<List<LogViewModel>>(requesterDetails);
+                    var LogView = _mapper.Map<LogViewModel>(requesterDetails);
                     response.Data = LogView;
                     return response;
                 }
@@ -285,7 +285,7 @@ namespace StaffApplication.Services
                     var user = await _userRepository.FindUser(info.DeactivateEmail);
                     response.ResponseMessage = "User Deactivated  Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var DeactivateView = _mapper.Map<List<DeactivateViewModel>>(requesterDetails);
+                    var DeactivateView = _mapper.Map<DeactivateViewModel>(requesterDetails);
                     response.Data = DeactivateView;
                     return response;
 
@@ -351,7 +351,7 @@ namespace StaffApplication.Services
                     var user = await _userRepository.FindUser(info.ReactivateEmail);
                     response.ResponseMessage = "User Reactivated  Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var ReactivateView = _mapper.Map<List<ReactivateViewModel>>(requesterDetails);
+                    var ReactivateView = _mapper.Map<ReactivateViewModel>(requesterDetails);
                     response.Data = ReactivateView;
                     return response;
 
@@ -395,7 +395,7 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "User details found";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var userView = _mapper.Map<List<UserViewModel>>(requesterDetails);
+                    var userView = _mapper.Map<UserViewModel>(requesterDetails);
                     response.Data = userView;
 
                     return response;
@@ -436,7 +436,7 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "User details found";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var userView = _mapper.Map<List<UserViewModel>>(requesterDetails);
+                    var userView = _mapper.Map<UserViewModel>(requesterDetails);
                     response.Data = userView;
 
                     return response;
