@@ -9,6 +9,7 @@ using StaffRegistrationPortal.Common;
 using StaffRegistrationPortal.Validatiors;
 using StaffRegistrationPortal.Enums;
 
+
 namespace StaffApplication.Controllers
 {
     [Route("api/[controller]")]

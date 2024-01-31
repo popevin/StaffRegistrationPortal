@@ -4,6 +4,7 @@ using StaffRegistrationPortal.Common;
 using StaffApplication.Repositories;
 using StaffRegistrationPortal.Services;
 using StaffRegistrationPortal.Enums;
+using AutoMapper;
 
 namespace StaffApplication.Services
 {
@@ -12,10 +13,12 @@ namespace StaffApplication.Services
 
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IUserRepository _userRepository;
-        public EmployeeService(IEmployeeRepository employeeRepository, IUserRepository userRepository)
+        private readonly IMapper _mapper;
+        public EmployeeService(IEmployeeRepository employeeRepository, IUserRepository userRepository,IMapper  mapper)
         {
             _employeeRepository = employeeRepository;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task<BaseResponse> CreateEmployee(CreateEmployee info)
@@ -48,7 +51,8 @@ namespace StaffApplication.Services
 
                     response.ResponseMessage = "Employee details Created Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = newEmployee;
+                    var employeeView = _mapper.Map<List<EmployeeViewModel>>(newEmployee);
+                    response.Data = employeeView;
                     return response;
                 }
                 else
@@ -99,7 +103,8 @@ namespace StaffApplication.Services
 
                     response.ResponseMessage = "Employee details Updated Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = updateEmployee;
+                    var employeeView = _mapper.Map<List<EmployeeViewModel>>(updateEmployee);
+                    response.Data = employeeView;
                     return response;
                 }
                 else
@@ -140,7 +145,8 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "Employee details Deleted Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = resp;
+                    var DeletedEmployeeView = _mapper.Map<List<EmployeeViewModel>>(requesterDetails);
+                    response.Data = DeletedEmployeeView;
                     return response;
                 }
                 else
@@ -178,7 +184,8 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "User details found";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = requesterDetails;
+                    var employeeView = _mapper.Map<List<EmployeeViewModel>>(requesterDetails);
+                    response.Data = employeeView;
                     return response;
 
                 }
@@ -218,7 +225,8 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "Employee details found";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = requesterDetails;
+                    var employeeView = _mapper.Map<List<EmployeeViewModel>>(requesterDetails);
+                    response.Data = employeeView;
                     return response;
 
                 }
@@ -248,7 +256,8 @@ namespace StaffApplication.Services
                 var infos = await _employeeRepository.GetAllActiveEmployee();
                 response.ResponseMessage = "Employee details found";
                 response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                response.Data = infos;
+                var employeeView = _mapper.Map<List<EmployeeViewModel>>(infos);
+                response.Data = employeeView;
                 return response;
             }
             catch (Exception ex)
@@ -268,7 +277,8 @@ namespace StaffApplication.Services
                 var infos = await  _employeeRepository.GetAllEmployee();
                 response.ResponseMessage = "Employee details found";
                 response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                response.Data = infos;
+                var employeeView = _mapper.Map<List<EmployeeViewModel>>(infos);
+                response.Data = employeeView;
                 return response;
             }
             catch (Exception ex)

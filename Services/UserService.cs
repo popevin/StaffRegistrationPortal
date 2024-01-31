@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using StaffApplication.DTOs;
 using StaffApplication.Repositories;
 using StaffRegistrationPortal.Common;
 using StaffRegistrationPortal.Enums;
 using StaffRegistrationPortal.Services;
 using System.Data;
+using System.Collections.Generic;
 
 namespace StaffApplication.Services
 {
@@ -12,11 +14,12 @@ namespace StaffApplication.Services
     {
         private readonly ILogger<UserService> _logger;
         private readonly IUserRepository _userRepository;
-
-        public UserService(IUserRepository userRepository, ILogger<UserService> logger)
+        private readonly IMapper _mapper;
+        public UserService(IUserRepository userRepository, ILogger<UserService> logger,IMapper mapper)
         {
             _userRepository = userRepository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<BaseResponse>CreateUser(CreateUser info)
@@ -59,7 +62,8 @@ namespace StaffApplication.Services
 
                     response.ResponseMessage = "User Created Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = user;
+                    var userView = _mapper.Map<List<UserViewModel>>(user);
+                    response.Data = userView;
                     return response;
                 }
                 else
@@ -111,7 +115,8 @@ namespace StaffApplication.Services
 
                     response.ResponseMessage = "User Updated Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = user;
+                    var userView = _mapper.Map<List<UserViewModel>>(user);
+                    response.Data = userView;
                     return response;
                 }
                 else
@@ -160,9 +165,10 @@ namespace StaffApplication.Services
                 if (resp > 0)
                 {
                     
-                    response.ResponseMessage = "User Logged in  Successfully";
+                    response.ResponseMessage= "User Logged in  Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = requesterDetails;
+                    var LogView = _mapper.Map<List<LogViewModel>>(requesterDetails);
+                    response.Data = LogView;
                     return response;
                 }
                 else
@@ -214,7 +220,8 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "User Logged out   Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = requesterDetails;
+                    var LogView = _mapper.Map<List<LogViewModel>>(requesterDetails);
+                    response.Data = LogView;
                     return response;
                 }
                 else
@@ -278,7 +285,8 @@ namespace StaffApplication.Services
                     var user = await _userRepository.FindUser(info.DeactivateEmail);
                     response.ResponseMessage = "User Deactivated  Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = user;
+                    var DeactivateView = _mapper.Map<List<DeactivateViewModel>>(requesterDetails);
+                    response.Data = DeactivateView;
                     return response;
 
                 }
@@ -343,7 +351,8 @@ namespace StaffApplication.Services
                     var user = await _userRepository.FindUser(info.ReactivateEmail);
                     response.ResponseMessage = "User Reactivated  Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = user;
+                    var ReactivateView = _mapper.Map<List<ReactivateViewModel>>(requesterDetails);
+                    response.Data = ReactivateView;
                     return response;
 
                 }
@@ -386,7 +395,9 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "User details found";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = requesterDetails;
+                    var userView = _mapper.Map<List<UserViewModel>>(requesterDetails);
+                    response.Data = userView;
+
                     return response;
 
                 }
@@ -425,7 +436,9 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "User details found";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    response.Data = requesterDetails;
+                    var userView = _mapper.Map<List<UserViewModel>>(requesterDetails);
+                    response.Data = userView;
+
                     return response;
 
                 }
@@ -455,7 +468,8 @@ namespace StaffApplication.Services
                 var infos = await _userRepository.GetAllUsers();
                 response.ResponseMessage = "User details found";
                 response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                response.Data = infos;
+                var userView = _mapper.Map<List<UserViewModel>>(infos);
+                response.Data= userView;
                 return response;
             }
             catch (Exception ex)
@@ -475,7 +489,9 @@ namespace StaffApplication.Services
                 var infos = await _userRepository.GetAllActiveUsers();
                 response.ResponseMessage = "User details found";
                 response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                response.Data = infos;
+                var userView = _mapper.Map<List<UserViewModel>>(infos);
+                response.Data = userView;
+
                 return response;
             }
             catch (Exception ex)
