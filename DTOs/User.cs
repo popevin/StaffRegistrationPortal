@@ -50,7 +50,6 @@ namespace StaffApplication.DTOs
     }
     public class User
     {
-        //all columns in user table
         public int UserId { get; set; }
         public int RoleId { get; set; }
 
@@ -96,8 +95,41 @@ namespace StaffApplication.DTOs
         public DateTime ReactivatedDate { get; set; }
     }
 
+    public class UserViewModel
+    {
 
+        public int UserId { get; set; }
+        public int RoleId { get; set; }
 
+        public int GenderId { get; set; }
+
+        public int DepartmentId { get; set; }
+
+        public string? Email { get; set; }
+
+        public string? FirstName { get; set; }
+
+        public string? LastName { get; set; }
+
+        public string? OtherName { get; set; }
+
+        public string? Address { get; set; }
+
+        public string? Phone { get; set; }
+
+        public bool IsActive { get; set; }
+    }
+
+    public  class LogViewModel
+    {
+        public string? Email { get; set; }
+
+        public string? FirstName { get; set; }
+
+        public string? LastName { get; set; }
+
+        public bool IsActive { get; set; }
+    }
     public class OrdersResponse
     {
         public int OrderId { get; set; }
