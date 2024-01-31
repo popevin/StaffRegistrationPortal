@@ -51,7 +51,7 @@ namespace StaffApplication.Services
 
                     response.ResponseMessage = "Employee details Created Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var employeeView = _mapper.Map<List<EmployeeViewModel>>(newEmployee);
+                    var employeeView = _mapper.Map<EmployeeViewModel>(newEmployee);
                     response.Data = employeeView;
                     return response;
                 }
@@ -103,7 +103,7 @@ namespace StaffApplication.Services
 
                     response.ResponseMessage = "Employee details Updated Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var employeeView = _mapper.Map<List<EmployeeViewModel>>(updateEmployee);
+                    var employeeView = _mapper.Map<EmployeeViewModel>(updateEmployee);
                     response.Data = employeeView;
                     return response;
                 }
@@ -145,7 +145,7 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "Employee details Deleted Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var DeletedEmployeeView = _mapper.Map<List<EmployeeViewModel>>(requesterDetails);
+                    var DeletedEmployeeView = _mapper.Map<EmployeeViewModel>(requesterDetails);
                     response.Data = DeletedEmployeeView;
                     return response;
                 }
@@ -184,7 +184,7 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "User details found";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var employeeView = _mapper.Map<List<EmployeeViewModel>>(requesterDetails);
+                    var employeeView = _mapper.Map<EmployeeViewModel>(requesterDetails);
                     response.Data = employeeView;
                     return response;
 
@@ -225,7 +225,7 @@ namespace StaffApplication.Services
                 {
                     response.ResponseMessage = "Employee details found";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
-                    var employeeView = _mapper.Map<List<EmployeeViewModel>>(requesterDetails);
+                    var employeeView = _mapper.Map<EmployeeViewModel>(requesterDetails);
                     response.Data = employeeView;
                     return response;
 
