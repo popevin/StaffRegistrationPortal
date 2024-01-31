@@ -17,7 +17,7 @@ namespace StaffRegistrationPortal
 
             CreateMap<Employee, EmployeeViewModel>();
 
-            CreateMap<Employee, DeletedViewModel>()
+            CreateMap<Employee, DeletedViewModel>();
 
         }
     }
