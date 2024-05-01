@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace StaffApplication.DTOs
+namespace StaffRegistrationPortal.DTOs
 {
     public class UpdateUser
     {
@@ -30,8 +30,7 @@ namespace StaffApplication.DTOs
 
         public bool IsUpdated { get; set; }
 
-        public string UpdatedBy { get; set; }
-
+       
 
 
 

@@ -5,7 +5,7 @@ using StaffApplication.Repositories;
 using StaffApplication.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.IIS.Core;
-using StaffApplication.DTOs;
+using StaffRegistrationPortal.DTOs;
 using System.Data;
 using System.Security.Principal;
 using StaffRegistrationPortal.Enums;
@@ -26,7 +26,7 @@ namespace StaffApplication.Repositories
             _logger = logger;
         }
 
-        public async Task<dynamic> CreateUser(CreateUser user)
+        public async Task<dynamic> CreateUser(CreateUser user, string createdBy)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace StaffApplication.Repositories
                     param.Add("@OtherName", user.OtherName);
                     param.Add("@Address", user.Address);
                     param.Add("@Phone", user.Phone);
-                    param.Add("@Created_By_User_Email", user.CreatedBy);
+                    param.Add("@Created_By_User_Email", createdBy);
 
                     dynamic resp = await _dapper.ExecuteAsync(_sqlprocedure, param: param, commandType: CommandType.StoredProcedure);
 
@@ -59,7 +59,7 @@ namespace StaffApplication.Repositories
             }
         }
 
-        public async Task<dynamic> UpdateUser(UpdateUser user)
+        public async Task<dynamic> UpdateUser(UpdateUser user, string updatedBy)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace StaffApplication.Repositories
                     param.Add("@OthernameUpd", user.OtherName);
                     param.Add("@AddressUpd", user.Address);
                     param.Add("@PhoneUpd", user.Phone);
-                    param.Add("@Updated_By_User_Email", user.UpdatedBy);
+                    param.Add("@Updated_By_User_Email", updatedBy);
 
                     dynamic resp = await _dapper.ExecuteAsync(_sqlprocedure, param: param, commandType: CommandType.StoredProcedure);
 
@@ -95,7 +95,7 @@ namespace StaffApplication.Repositories
         }
 
 
-        public async Task<int> DeActivateUser(DeactivateUser user)
+        public async Task<int> DeActivateUser(DeactivateUser user, string deactivatedBy)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace StaffApplication.Repositories
                     var param = new DynamicParameters();
                     param.Add("@Status", UserStatusGuides.DeactivateUser);
                     param.Add("@UserIdDeActivate", user.Id);
-                    param.Add("@Deactivated_By_User_Email", user.DeactivatedBy);
+                    param.Add("@Deactivated_By_User_Email", deactivatedBy);
 
 
                     dynamic resp = await _dapper.ExecuteAsync(_sqlprocedure, param: param, commandType: CommandType.StoredProcedure);
@@ -123,7 +123,7 @@ namespace StaffApplication.Repositories
         }
     
 
-        public async Task<int> ReActivateUser(ReactivateUser user)
+        public async Task<int> ReActivateUser(ReactivateUser user, string reactivatedBy)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace StaffApplication.Repositories
                     var param = new DynamicParameters();
                     param.Add("@Status", UserStatusGuides.ReactivateUser);
                     param.Add("@UserIdReActivate", user.Id);
-                    param.Add("@Reactivated_By_User_Email", user.ReactivatedBy);
+                    param.Add("@Reactivated_By_User_Email", reactivatedBy);
 
 
 

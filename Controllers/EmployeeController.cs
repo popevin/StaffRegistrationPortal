@@ -1,13 +1,9 @@
-﻿using Dapper;
-using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
-using StaffApplication.Repositories;
-using StaffApplication.Services;
-using StaffApplication.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
 using StaffRegistrationPortal.Services;
 using StaffRegistrationPortal.Common;
 using StaffRegistrationPortal.Validatiors;
-using FluentValidation;
+using StaffRegistrationPortal.DTOs;
+using System.Security.Claims;
 
 namespace StaffApplication.Controllers
 {
@@ -27,6 +23,7 @@ namespace StaffApplication.Controllers
         public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployee request)
         {
             var response = new BaseResponse();
+            var email = User.FindFirstValue(ClaimTypes.Email);
             var validator = new CreateEmployeeValidator();
             var validateResult = await validator.ValidateAsync(request);
             string? validationMessage = string.Empty;
@@ -44,7 +41,7 @@ namespace StaffApplication.Controllers
                 response.Data = null;
                 return Ok(response);
             }
-            return Ok(await _employeeService.CreateEmployee(request));
+            return Ok(await _employeeService.CreateEmployee(request,email));
 
         }
 
@@ -52,6 +49,7 @@ namespace StaffApplication.Controllers
         public async Task<IActionResult> UpdateEmployee(UpdateEmployee request)
         {
             var response = new BaseResponse();
+            var email = User.FindFirstValue(ClaimTypes.Email);
             var validator = new UpdateEmployeeValidator();
             var validateResult = await validator.ValidateAsync(request);
             string? validationMessage = string.Empty;
@@ -69,7 +67,7 @@ namespace StaffApplication.Controllers
                 response.Data = null;
                 return Ok(response);
             }
-            return Ok(await _employeeService.UpdateEmployee(request));
+            return Ok(await _employeeService.UpdateEmployee(request,email));
         }
 
         [HttpDelete("DeleteEmployeeDetails")]
@@ -77,6 +75,7 @@ namespace StaffApplication.Controllers
         {
 
             var response = new BaseResponse();
+            var email = User.FindFirstValue(ClaimTypes.Email);
             var validator = new DeleteEmployeeValidator();
             var validateResult = await validator.ValidateAsync(request);
             string? validationMessage = string.Empty;
@@ -94,7 +93,7 @@ namespace StaffApplication.Controllers
                 response.Data = null;
                 return Ok(response);
             }
-            return Ok(await _employeeService.DeleteEmployee(request));
+            return Ok(await _employeeService.DeleteEmployee(request,email));
         }
 
 

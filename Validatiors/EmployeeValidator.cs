@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using StaffApplication.DTOs;
 using Microsoft.AspNetCore.Identity;
+using StaffRegistrationPortal.DTOs;
 
 namespace StaffRegistrationPortal.Validatiors
 {
@@ -34,9 +34,7 @@ namespace StaffRegistrationPortal.Validatiors
             RuleFor(x => x.IdUploadPath)
                  .NotEmpty().Must(value => !string.IsNullOrEmpty(value) && !value.Contains("string"))
                  .WithMessage("IdUploadPath name is required.");
-            RuleFor(x => x.CreatedBy)
-                .NotEmpty().Must(value => !string.IsNullOrEmpty(value) && !value.Contains("string"))
-                .WithMessage("Createdby  name is required.");
+         
         }
 
     }
@@ -75,9 +73,7 @@ namespace StaffRegistrationPortal.Validatiors
             RuleFor(x => x.IdUploadPath)
                  .NotEmpty().Must(value => !string.IsNullOrEmpty(value) && !value.Contains("string"))
                  .WithMessage("IdUploadPath name is required.");
-            RuleFor(x => x.UpdatedBy)
-                .NotEmpty().Must(value => !string.IsNullOrEmpty(value) && !value.Contains("string"))
-                .WithMessage("Createdby  name is required.");
+            
         }
 
     }
@@ -90,9 +86,6 @@ namespace StaffRegistrationPortal.Validatiors
             RuleFor(x => x.Id)
                .GreaterThan(0).WithMessage("Id must be greater than zero.");
 
-            RuleFor(x => x.DeletedBy)
-                .NotEmpty().Must(value => !string.IsNullOrEmpty(value) && !value.Contains("string"))
-                .WithMessage("Createdby  name is required.");
 
         }
 

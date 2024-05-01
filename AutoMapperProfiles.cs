@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using StaffApplication.DTOs;
+using StaffRegistrationPortal.DTOs;
 
 namespace StaffRegistrationPortal
 {

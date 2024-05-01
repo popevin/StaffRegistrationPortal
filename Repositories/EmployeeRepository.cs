@@ -1,6 +1,5 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Mvc;
-using StaffApplication.DTOs;
+using StaffRegistrationPortal.DTOs;
 using StaffRegistrationPortal.Enums;
 using System.Data;
 using System.Data.SqlClient;
@@ -24,7 +23,7 @@ namespace StaffApplication.Repositories
         }
 
 
-        public async Task<dynamic> CreateEmployee(CreateEmployee info)
+        public async Task<dynamic> CreateEmployee(CreateEmployee info, string createdBy)
         {
             try
             {
@@ -46,7 +45,7 @@ namespace StaffApplication.Repositories
                     param.Add("@NationalIDcode", info.NationalIDcode);
                     param.Add("@Nationality", info.Nationality);
                     param.Add("@IdUploadPath", info.IdUploadPath);
-                    param.Add("@Created_By_User_Email", info.CreatedBy);
+                    param.Add("@Created_By_User_Email", createdBy);
                     
 
                     dynamic resp = await _dapper.ExecuteAsync(_sqlprocedure, param: param, commandType: CommandType.StoredProcedure);
@@ -62,7 +61,7 @@ namespace StaffApplication.Repositories
             }
         }
 
-        public async Task<dynamic> UpdateEmployee(UpdateEmployee info)
+        public async Task<dynamic> UpdateEmployee(UpdateEmployee info, string updatedBy)
         {
             try
             {
@@ -85,7 +84,7 @@ namespace StaffApplication.Repositories
                     param.Add("@NationalIDcodeUpd", info.NationalIDcode);
                     param.Add("@NationalityUpd", info.Nationality);
                     param.Add("@IdUploadPathUpd", info.IdUploadPath);
-                    param.Add("@Updated_By_User_Email", info.UpdatedBy);
+                    param.Add("@Updated_By_User_Email", updatedBy);
 
 
                     dynamic resp = await _dapper.ExecuteAsync(_sqlprocedure, param: param, commandType: CommandType.StoredProcedure);
@@ -102,7 +101,7 @@ namespace StaffApplication.Repositories
 
         }
 
-        public async Task<int> DeleteEmployee(DeleteEmployee info)
+        public async Task<int> DeleteEmployee(DeleteEmployee info,string deletedBy)
         {
             try
             {
@@ -111,7 +110,7 @@ namespace StaffApplication.Repositories
                     var param = new DynamicParameters();
                     param.Add("@Status", EmployeeStatusGuides.DeleteEmployee);
                     param.Add("@Deleted_By_User_Email", info.Id);
-                    param.Add("@Deactivated_By_User_Email", info.DeletedBy);
+                    param.Add("@Deactivated_By_User_Email", deletedBy);
 
 
                     dynamic resp = await _dapper.ExecuteAsync(_sqlprocedure, param: param, commandType: CommandType.StoredProcedure);

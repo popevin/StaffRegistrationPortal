@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using StaffApplication.DTOs;
 using StaffApplication.Repositories;
 using StaffRegistrationPortal.Common;
 using StaffRegistrationPortal.Enums;
 using StaffRegistrationPortal.Services;
 using System.Data;
 using System.Collections.Generic;
+using StaffRegistrationPortal.DTOs;
 
 namespace StaffApplication.Services
 {
@@ -15,19 +15,22 @@ namespace StaffApplication.Services
         private readonly ILogger<UserService> _logger;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public UserService(IUserRepository userRepository, ILogger<UserService> logger,IMapper mapper)
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+
+        public UserService(IUserRepository userRepository, ILogger<UserService> logger, IMapper mapper, IJwtTokenGenerator jwtTokenGenerator)
         {
             _userRepository = userRepository;
             _logger = logger;
             _mapper = mapper;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
-        public async Task<BaseResponse>CreateUser(CreateUser info)
+        public async Task<BaseResponse> CreateUser(CreateUser info, string createdBy)
         {
             var response = new BaseResponse();
             try
             {
-                var requesterDetails = await _userRepository.FindUser(info.CreatedBy);
+                var requesterDetails = await _userRepository.FindUser(createdBy);
 
                 if (requesterDetails == null)
                 {
@@ -50,12 +53,12 @@ namespace StaffApplication.Services
                 if (checkmail != null)
                 {
                     response.ResponseMessage = "User already exist";
-                    response.ResponseCode = ResponseCode.DuplicateError.ToString("D").PadLeft(2, '0'); 
+                    response.ResponseCode = ResponseCode.DuplicateError.ToString("D").PadLeft(2, '0');
                     response.Data = null;
                     return response;
                 }
 
-                var resp = await _userRepository.CreateUser(info);
+                var resp = await _userRepository.CreateUser(info, createdBy);
                 if (resp > 0)
                 {
                     var user = await _userRepository.FindUser(info.Email);
@@ -85,12 +88,12 @@ namespace StaffApplication.Services
             }
         }
 
-        public async Task<BaseResponse> UpdateUser(UpdateUser info)
+        public async Task<BaseResponse> UpdateUser(UpdateUser info, string updatedBy)
         {
             var response = new BaseResponse();
             try
             {
-                var requesterDetails = await _userRepository.FindUser(info.UpdatedBy);
+                var requesterDetails = await _userRepository.FindUser(updatedBy);
                 if (requesterDetails == null)
                 {
                     response.ResponseMessage = "No Existing AuthoriZer for this action";
@@ -106,9 +109,9 @@ namespace StaffApplication.Services
                     return response;
                 }
 
-              
 
-                var resp = await _userRepository.UpdateUser(info);
+
+                var resp = await _userRepository.UpdateUser(info,updatedBy);
                 if (resp > 0)
                 {
                     var user = await _userRepository.FindUser(info.Email);
@@ -164,12 +167,16 @@ namespace StaffApplication.Services
                 var resp = await _userRepository.LogInUser(info);
                 if (resp > 0)
                 {
-                    
-                    response.ResponseMessage= "User Logged in  Successfully";
+                    response.ResponseMessage = "User Logged in  Successfully";
                     response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
                     var LogView = _mapper.Map<LogViewModel>(requesterDetails);
-                    response.Data = LogView;
+                    var token = _jwtTokenGenerator.GenerateToken(LogView);
+                    LogView.Token = token;
+                    response.Data = token;
                     return response;
+
+
+                    
                 }
                 else
                 {
@@ -177,7 +184,6 @@ namespace StaffApplication.Services
                     response.ResponseCode = ResponseCode.Exception.ToString("D").PadLeft(2, '0');
                     response.Data = null;
                     return response;
-
                 }
 
             }
@@ -246,13 +252,13 @@ namespace StaffApplication.Services
 
         }
 
-        public async Task<BaseResponse> DeactivateUser(DeactivateUser info)
+        public async Task<BaseResponse> DeactivateUser(DeactivateUser info,string deactivatedBy)
         {
             var response = new BaseResponse();
 
             try
             {
-                var requesterDetails = await _userRepository.FindUser(info.DeactivatedBy);
+                var requesterDetails = await _userRepository.FindUser(deactivatedBy);
                 if (requesterDetails == null)
                 {
                     response.ResponseMessage = "Authoriser details cannot be found. Not a valid User";
@@ -279,7 +285,7 @@ namespace StaffApplication.Services
                     return response;
                 }
 
-                var resp = await _userRepository.DeActivateUser(info);
+                var resp = await _userRepository.DeActivateUser(info,deactivatedBy);
                 if (resp > 0)
                 {
                     var user = await _userRepository.FindUser(info.DeactivateEmail);
@@ -311,13 +317,13 @@ namespace StaffApplication.Services
 
         }
 
-        public async Task<BaseResponse> ReactivateUser(ReactivateUser info)
+        public async Task<BaseResponse> ReactivateUser(ReactivateUser info, string reactivatedBy)
         {
             var response = new BaseResponse();
 
             try
             {
-                var requesterDetails = await _userRepository.FindUser(info.ReactivatedBy);
+                var requesterDetails = await _userRepository.FindUser(reactivatedBy);
                 if (requesterDetails == null)
                 {
                     response.ResponseMessage = "User details cannot be found. Not a valid User";
@@ -334,7 +340,7 @@ namespace StaffApplication.Services
                     response.Data = null;
                     return response;
                 }
-               
+
 
                 var checkmail = await _userRepository.FindUser(info.ReactivateEmail);
                 if (checkmail == null)
@@ -345,7 +351,7 @@ namespace StaffApplication.Services
                     return response;
                 }
 
-                var resp = await _userRepository.ReActivateUser(info);
+                var resp = await _userRepository.ReActivateUser(info,reactivatedBy);
                 if (resp > 0)
                 {
                     var user = await _userRepository.FindUser(info.ReactivateEmail);
@@ -469,13 +475,13 @@ namespace StaffApplication.Services
                 response.ResponseMessage = "User details found";
                 response.ResponseCode = ResponseCode.Ok.ToString("D").PadLeft(2, '0');
                 var userView = _mapper.Map<List<UserViewModel>>(infos);
-                response.Data= userView;
+                response.Data = userView;
                 return response;
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = $"An exception occured while trying to get all users ==> Message: {ex.Message}";
-                response.ResponseCode = ResponseCode.Exception.ToString("D").PadLeft(2, '0')   ;
+                response.ResponseCode = ResponseCode.Exception.ToString("D").PadLeft(2, '0');
                 response.Data = null;
                 return response;
             }

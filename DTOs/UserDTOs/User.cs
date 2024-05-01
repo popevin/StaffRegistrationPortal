@@ -1,53 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Numerics;
 
-namespace StaffApplication.DTOs
+namespace StaffRegistrationPortal.DTOs
 {
-    public class CreateUser
-    {
-
-        //fields to create user
-         public int RoleId { get; set; }
-
-        public int GenderId { get; set; }
-
-        public int DepartmentId { get; set; }
-
-        public string? Email { get; set; } 
-
-        public string? Password { get; set; } 
-
-        public string? FirstName { get; set; } 
-
-        public string? LastName { get; set; } 
-
-        public string? OtherName { get; set; } 
-
-        public string? Address { get; set; } 
-
-        public string? Phone { get; set; } 
-
-        public string? CreatedBy { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-
-
-
-    }
-    public class EmailandPassword
-    {
-        public string? Email { get; set; }
-
-        public string? Password { get; set; }
-    }
-    public class EmailInput
-    {
-        public string? Email { get; set; }
-    }
-    public class InputId
-    {
-        public long Id { get; set; }
-    }
+   
+    
+    
+   
     public class User
     {
         public int UserId { get; set; }
@@ -95,41 +54,8 @@ namespace StaffApplication.DTOs
         public DateTime ReactivatedDate { get; set; }
     }
 
-    public class UserViewModel
-    {
-
-        public int UserId { get; set; }
-        public int RoleId { get; set; }
-
-        public int GenderId { get; set; }
-
-        public int DepartmentId { get; set; }
-
-        public string? Email { get; set; }
-
-        public string? FirstName { get; set; }
-
-        public string? LastName { get; set; }
-
-        public string? OtherName { get; set; }
-
-        public string? Address { get; set; }
-
-        public string? Phone { get; set; }
-
-        public bool IsActive { get; set; }
-    }
-
-    public  class LogViewModel
-    {
-        public string? Email { get; set; }
-
-        public string? FirstName { get; set; }
-
-        public string? LastName { get; set; }
-
-        public bool IsActive { get; set; }
-    }
+   
+  
     public class OrdersResponse
     {
         public int OrderId { get; set; }

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StaffApplication.DTOs;
 using StaffRegistrationPortal.Common;
 using StaffApplication.Repositories;
 using StaffRegistrationPortal.Services;
 using StaffRegistrationPortal.Enums;
 using AutoMapper;
+using StaffRegistrationPortal.DTOs;
 
 namespace StaffApplication.Services
 {
@@ -21,13 +21,13 @@ namespace StaffApplication.Services
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse> CreateEmployee(CreateEmployee info)
+        public async Task<BaseResponse> CreateEmployee(CreateEmployee info, string createdBy )
         {
             var response = new BaseResponse();
 
             try
             {
-                var requesterDetails = await _userRepository.FindUser(info.CreatedBy);
+                var requesterDetails = await _userRepository.FindUser(createdBy);
                 if (requesterDetails == null)
                 {
                     response.ResponseMessage = "User details not found and not authorised to create an employee data";
@@ -44,7 +44,7 @@ namespace StaffApplication.Services
                     response.Data = null;
                     return response;
                 }
-                var resp = await _employeeRepository.CreateEmployee(info);
+                var resp = await _employeeRepository.CreateEmployee(info,createdBy);
                 if (resp > 0)
                 {
                     var newEmployee = await _employeeRepository.FindEmployee(info.UserId);
@@ -74,7 +74,7 @@ namespace StaffApplication.Services
 
         }
 
-        public async Task<BaseResponse> UpdateEmployee(UpdateEmployee info)
+        public async Task<BaseResponse> UpdateEmployee(UpdateEmployee info, string updatedBy)
         {
             var response = new BaseResponse();
 
@@ -96,7 +96,7 @@ namespace StaffApplication.Services
                     response.Data = null;
                     return response;
                 }
-                var resp = await _employeeRepository.UpdateEmployee(info);
+                var resp = await _employeeRepository.UpdateEmployee(info,updatedBy);
                 if (resp > 0)
                 {
                     var updateEmployee = await _employeeRepository.FindEmployee(info.UserId);
@@ -126,13 +126,13 @@ namespace StaffApplication.Services
             }
         }
 
-        public async Task<BaseResponse> DeleteEmployee(DeleteEmployee info)
+        public async Task<BaseResponse> DeleteEmployee(DeleteEmployee info, string deletedBy)
         {
             var response = new BaseResponse();
             try
             {
 
-                var requesterDetails = await _employeeRepository.FindEmployee(info.DeletedBy);
+                var requesterDetails = await _employeeRepository.FindEmployee(deletedBy);
                 if (requesterDetails == null)
                 {
                     response.ResponseMessage = "Employee details not found or probably deleted,  ";
@@ -140,7 +140,7 @@ namespace StaffApplication.Services
                     response.Data = null;
                     return response;
                 }
-                var resp = await _employeeRepository.DeleteEmployee(info);
+                var resp = await _employeeRepository.DeleteEmployee(info,deletedBy);
                 if (resp > 0)
                 {
                     response.ResponseMessage = "Employee details Deleted Successfully";
