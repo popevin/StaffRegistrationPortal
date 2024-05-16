@@ -19,7 +19,7 @@ namespace StaffRegistrationPortal.Services
 
         Task<BaseResponse> FindUser(string userEmail);
 
-        Task<BaseResponse> FindUser(long userId);
+        Task<BaseResponse> FindUser(int userId);
 
         Task<BaseResponse> GetAllUsers();
 

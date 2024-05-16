@@ -195,7 +195,7 @@ namespace StaffApplication.Repositories
             }
         }
 
-        public async Task<User> FindUser(long userId)
+        public async Task<User> FindUser(int userId)
         {
             try
             {

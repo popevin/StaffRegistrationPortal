@@ -42,6 +42,8 @@ namespace StaffRegistrationPortal.Validatiors
             //     .NotEmpty().Must(value => !string.IsNullOrEmpty(value) && !value.Contains("string"))
             //     .WithMessage("CreatedBy name is required.");
         }
+
+      
     }
 
 
@@ -134,6 +136,23 @@ namespace StaffRegistrationPortal.Validatiors
         }
     }
 
+    public class UserEmailValidator : AbstractValidator<string>
+    {
+        public UserEmailValidator()
+        {
+            RuleFor(x=>x as string)
+                 .NotEmpty().Must(value => !string.IsNullOrEmpty(value) && !value.Contains("string"))
+                 .WithMessage($"Email is required.");
+        }
+    }
 
+    public class UserIdValidator : AbstractValidator<int>
+    {
+        public UserIdValidator()
+        {
+            RuleFor(x=>(int)(object) x)
+               .GreaterThan(0).WithMessage("Id must be greater than zero.");
+        }
+    }
 
 }

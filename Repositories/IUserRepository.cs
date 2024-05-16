@@ -18,7 +18,7 @@ namespace StaffApplication.Repositories
         Task<int> ReActivateUser(ReactivateUser info, string reactivatedBy);
 
         Task<User> FindUser(string userEmail);
-        Task<User> FindUser(long userId);
+        Task<User> FindUser(int userId);
 
         Task<IEnumerable<User>> GetAllUsers();
 

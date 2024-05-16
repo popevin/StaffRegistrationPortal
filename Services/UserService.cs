@@ -424,7 +424,7 @@ namespace StaffApplication.Services
                 return response;
             }
         }
-        public async Task<BaseResponse> FindUser(long userId)
+        public async Task<BaseResponse> FindUser(int userId)
         {
             var response = new BaseResponse();
 

@@ -1,5 +1,6 @@
 
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +8,9 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using StaffApplication.Repositories;
 using StaffApplication.Services;
+using StaffRegistrationPortal.DTOs;
 using StaffRegistrationPortal.Services;
+using StaffRegistrationPortal.Validatiors;
 using System.Reflection;
 using System.Text;
 
@@ -29,7 +32,15 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IValidationService, ValidationService>();
 
+builder.Services.AddTransient<IValidator<CreateUser>, CreateUserValidator>();
+builder.Services.AddTransient<IValidator<UpdateUser>, UpdateUserValidator>();
+builder.Services.AddTransient<IValidator<DeactivateUser>, DeactivatorValidator>();
+builder.Services.AddTransient<IValidator<ReactivateUser>, ReactivatorValidator>();
+builder.Services.AddTransient<IValidator<int>, UserIdValidator>();
+builder.Services.AddTransient<IValidator<EmailandPassword>, EmailandPasswordValidator>();
+builder.Services.AddTransient<IValidator<string>, UserEmailValidator>();
 
 // Read JWT configuration from appsettings.json
 var configuration = new ConfigurationBuilder()

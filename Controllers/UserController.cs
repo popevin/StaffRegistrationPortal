@@ -11,6 +11,7 @@ using StaffRegistrationPortal.Enums;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using StaffRegistrationPortal.DTOs;
+using FluentValidation;
 
 namespace StaffApplication.Controllers
 {
@@ -18,43 +19,27 @@ namespace StaffApplication.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        public readonly IUserService _userService;
+        private readonly IUserService _userService;
+        private readonly IValidationService _validationService;
        
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IValidationService validationService)
         {
             _userService = userService;
-         
+            _validationService = validationService;
         }
 
         [Authorize]
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUser request)
         {
-            var response = new BaseResponse();
+           
 
-            //var email = "read email valur from claim";
             var email = User.FindFirstValue(ClaimTypes.Email);
-
-            var validator = new CreateUserValidator();
-            var validateResult = await validator.ValidateAsync(request);
-            string? validationMessage = string.Empty;
-
-            if (validateResult.Errors.Count > 0)
+            var validationResponse = await _validationService.ValidateAsync(request);
+            if (validationResponse.ResponseCode == ResponseCode.ValidationError.ToString("D").PadLeft(2, '0'))
             {
-                var errors = new List<string>();
-                validateResult.Errors.ForEach(x =>
-                {
-                    errors.Add(x.ErrorMessage);
-                });
-                validationMessage = Utils.ErrorBuilder(errors);
-
-                //_logger.LogError($"Validation Error ==> {validationMessage}");
-
-                //response.ResponseCode = ResponseCode.Exception.ToString("D").PadLeft(2, '0');
-                response.ResponseCode = ResponseCode.ValidationError.ToString("D").PadLeft(2, '0'); 
-                response.ResponseMessage = $"{validationMessage}";
-                response.Data = null;
-                return Ok(response);
+               
+                return Ok(validationResponse);
             }
             return Ok(await _userService.CreateUser(request, email));
                      
@@ -64,27 +49,12 @@ namespace StaffApplication.Controllers
         [HttpPost("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUser request)
         {
-            var response = new BaseResponse();
             var email = User.FindFirstValue(ClaimTypes.Email);
-            var validator = new UpdateUserValidator();
-            var validateResult= await validator.ValidateAsync(request);
-            string? validationMessage = string.Empty;
+            var validationResponse = await _validationService.ValidateAsync(request);
+            if (validationResponse.ResponseCode == ResponseCode.ValidationError.ToString("D").PadLeft(2, '0'))
+            {
 
-            if (validateResult.Errors.Count > 0) 
-            { 
-                var errors= new List<string>();
-                validateResult.Errors.ForEach(x =>
-                {
-                    errors.Add(x.ErrorMessage);
-
-                });
-                validationMessage = Utils.ErrorBuilder(errors);
-
-                response.ResponseCode = response.ResponseCode = ResponseCode.ValidationError.ToString("D").PadLeft(2, '0');
-                response.ResponseMessage = $"{validationMessage}";
-                response.Data = null;
-                return Ok(response);
-            
+                return Ok(validationResponse);
             }
 
             return Ok(await _userService.UpdateUser(request,email));
@@ -94,54 +64,27 @@ namespace StaffApplication.Controllers
        public async Task<IActionResult> LoginUser(EmailandPassword info)
 
         {
-            var response= new BaseResponse();
-           
-            var validator = new EmailandPasswordValidator();
-            var validateResult = await validator.ValidateAsync(info);
-            string? validationMessage = string.Empty;
-
-            if(validateResult.Errors.Count > 0)
+            
+            var validationResponse = await _validationService.ValidateAsync(info);
+            if (validationResponse.ResponseCode == ResponseCode.ValidationError.ToString("D").PadLeft(2, '0'))
             {
-                var errors=new List<string>();
-                validateResult.Errors.ForEach(x =>
-                {
-                    errors.Add(x.ErrorMessage);
-                });
-                validationMessage = Utils.ErrorBuilder(errors);
 
-                response.ResponseCode = response.ResponseCode = ResponseCode.ValidationError.ToString("D").PadLeft(2, '0');
-                response.ResponseMessage = $"{validationMessage}";
-                response.Data = null;
-                return Ok(response);
+                return Ok(validationResponse);
             }
 
-            var LogInResponse = await _userService.LogInUser(info);
-           
-            return Ok(LogInResponse);
+            return Ok(await _userService.LogInUser(info));
         }
 
         [Authorize]
         [HttpPost("LogOutUser")]
         public async Task<IActionResult> LogOutUser(EmailandPassword info)
         {
-            var response = new BaseResponse();
-            var validator = new EmailandPasswordValidator();
-            var validateResult = await validator.ValidateAsync(info);
-            string? validationMessage = string.Empty;
-
-            if (validateResult.Errors.Count > 0)
+            
+            var validationResponse = await _validationService.ValidateAsync(info);
+            if (validationResponse.ResponseCode == ResponseCode.ValidationError.ToString("D").PadLeft(2, '0'))
             {
-                var errors = new List<string>();
-                validateResult.Errors.ForEach(x =>
-                {
-                    errors.Add(x.ErrorMessage);
-                });
-                validationMessage = Utils.ErrorBuilder(errors);
 
-                response.ResponseCode = response.ResponseCode = ResponseCode.ValidationError.ToString("D").PadLeft(2, '0');
-                response.ResponseMessage = $"{validationMessage}";
-                response.Data = null;
-                return Ok(response);
+                return Ok(validationResponse);
             }
 
 
@@ -152,27 +95,14 @@ namespace StaffApplication.Controllers
         [HttpPost("DeActivateUser")]
         public async Task<IActionResult> DeActivate(DeactivateUser info)
         {
-            var response= new BaseResponse();
             var email = User.FindFirstValue(ClaimTypes.Email);
-            var validator= new DeactivatorValidator();
-            var validateResult= await validator.ValidateAsync(info);
-            string? validationMessage = string.Empty;
-
-            if(validateResult.Errors.Count > 0) 
+            var validationResponse = await _validationService.ValidateAsync(info);
+            if (validationResponse.ResponseCode == ResponseCode.ValidationError.ToString("D").PadLeft(2, '0'))
             {
-                var errors=new List<string>();
-                validateResult.Errors.ForEach(x =>
-                {
-                    errors.Add(x.ErrorMessage);
 
-                });
-                validationMessage = Utils.ErrorBuilder(errors);
-                response.ResponseCode = response.ResponseCode = ResponseCode.ValidationError.ToString("D").PadLeft(2, '0');
-                response.ResponseMessage = $"{validationMessage}";
-                response.Data = null;
-                return Ok(response);
-
+                return Ok(validationResponse);
             }
+
 
             return Ok(await _userService.DeactivateUser(info,email));
         }
@@ -181,27 +111,14 @@ namespace StaffApplication.Controllers
         [HttpPost("ReActivateUser")]
         public async Task<IActionResult> ReActivate(ReactivateUser info)
         {
-            var response = new BaseResponse();
             var email = User.FindFirstValue(ClaimTypes.Email);
-            var validator = new ReactivatorValidator();
-            var validateResult = await validator.ValidateAsync(info);
-            string? validationMessage = string.Empty;
-
-            if (validateResult.Errors.Count > 0)
+            var validationResponse = await _validationService.ValidateAsync(info);
+            if (validationResponse.ResponseCode == ResponseCode.ValidationError.ToString("D").PadLeft(2, '0'))
             {
-                var errors = new List<string>();
-                validateResult.Errors.ForEach(x =>
-                {
-                    errors.Add(x.ErrorMessage);
 
-                });
-                validationMessage = Utils.ErrorBuilder(errors);
-                response.ResponseCode = response.ResponseCode = ResponseCode.ValidationError.ToString("D").PadLeft(2, '0');
-                response.ResponseMessage = $"{validationMessage}";
-                response.Data = null;
-                return Ok(response);
-
+                return Ok(validationResponse);
             }
+
 
             return Ok(await _userService.ReactivateUser(info,email));
         }
@@ -211,15 +128,12 @@ namespace StaffApplication.Controllers
 
         public async Task<IActionResult> FindUserbyEmail([FromQuery]  string userEmail)
         {
-            var response = new BaseResponse();
-            if (string.IsNullOrEmpty(userEmail))
+            
+            var validationResponse = await _validationService.ValidateAsync(userEmail);
+            if (validationResponse.ResponseCode == ResponseCode.ValidationError.ToString("D").PadLeft(2, '0'))
             {
-                response.ResponseCode = response.ResponseCode = ResponseCode.ValidationError.ToString("D").PadLeft(2, '0');
-                response.ResponseMessage = "userEmail field is required";
-                response.Data = null;
 
-                return Ok(response);
-
+                return Ok(validationResponse);
             }
             return Ok(await _userService.FindUser(userEmail));
             /*var validator= new EmailValidator();
@@ -230,15 +144,14 @@ namespace StaffApplication.Controllers
         [Authorize]
         [HttpGet("FindUserbyId")]
 
-        public async Task<IActionResult> FindUserbyId([FromQuery] long userId)
+        public async Task<IActionResult> FindUserbyId([FromQuery] int userId)
         {
-            var response = new BaseResponse();
-            if (userId <= 0)
+            
+            var validationResponse = await _validationService.ValidateAsync(userId);
+            if (validationResponse.ResponseCode == ResponseCode.ValidationError.ToString("D").PadLeft(2, '0'))
             {
-                response.ResponseCode = response.ResponseCode = ResponseCode.ValidationError.ToString("D").PadLeft(2, '0');
-                response.ResponseMessage = "UserId is required ";
-                response.Data = null;
-                return Ok(response);
+
+                return Ok(validationResponse);
             }
 
             return Ok(await _userService.FindUser(userId));
